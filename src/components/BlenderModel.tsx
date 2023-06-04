@@ -1,9 +1,11 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 //import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 const BlenderModel: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const [rotation, setRotation] = useState({ x: 0, y: 0, z: 0 });
 
   useEffect(() => {
     let scene: THREE.Scene;
@@ -58,25 +60,23 @@ const BlenderModel: React.FC = () => {
       scene.add(model);
     };
 
+    //update coordinates values
+    const handleNotification = (message: any) => {
+      const { x, y, z } = message.payload.value;
+      console.log(`x: ${x}, y: ${y}, z: ${z}`)
+      setRotation({ x, y, z });
+    };
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+    robothubApi.onNotificationWithkey('rSchema/number', handleNotification);
+
     const animate = () => {
       requestAnimationFrame(animate);
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        robothubApi.onNotificationWithkey('rSchema/number', (message)=>{
-
-          // const yValue = +message.payload.value.y
-          // const xValue = +message.payload.value.x
-          // const zValue = +message.payload.value.z
-
-          const {x, y, z} = message.payload.value
-          console.log(`x: ${x}, y: ${y}, z: ${z}`)
-          model.rotation.y = x;
-          model.rotation.x = y;
-          model.rotation.z = z;
-        })
-
-
-
+          model.rotation.y = rotation.y
+          model.rotation.x = rotation.x
+          model.rotation.z = rotation.z
       renderer.render(scene, camera);
     };
 
