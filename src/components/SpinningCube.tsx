@@ -39,7 +39,6 @@ const SpinningCube: React.FC = () => {
 
       cube.rotation.x += 0.01;
       cube.rotation.y += 0.01;
-      cube.rotation.z 
 
       renderer.render(scene, camera);
     };
