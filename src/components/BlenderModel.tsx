@@ -61,14 +61,13 @@ const BlenderModel: React.FC = () => {
     };
 
     //update coordinates values
-    const handleNotification = (message: any) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+    robothubApi.onNotificationWithKey('rSchema/number', (message)=> {
       const { x, y, z } = message.payload.value;
       console.log(`x: ${x}, y: ${y}, z: ${z}`)
       setRotation({ x, y, z });
-    };
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-    robothubApi.onNotificationWithKey('rSchema/number', handleNotification);
+    });
 
     const animate = () => {
       requestAnimationFrame(animate);
