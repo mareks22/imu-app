@@ -60,12 +60,20 @@ const BlenderModel: React.FC = () => {
 
     const animate = () => {
       requestAnimationFrame(animate);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        robothubApi.onNotificationWithkey('rSchema/number', (message)=>{
 
-      if (model) {
-        model.rotation.y += 0.001;
-        model.rotation.x += 0.001;
-        model.rotation.z += 0.001;
-      }
+          const yValue = message.payload.value.y
+          const xValue = message.payload.value.x
+          const zValue = message.payload.value.z
+
+          model.rotation.y = +yValue;
+          model.rotation.x = +xValue;
+          model.rotation.z = +zValue;
+        })
+
+
 
       renderer.render(scene, camera);
     };
