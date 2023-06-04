@@ -68,7 +68,7 @@ const BlenderModel: React.FC = () => {
     };
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-    robothubApi.onNotificationWithkey('rSchema/number', handleNotification);
+    robothubApi.onNotificationWithKey('rSchema/number', handleNotification);
 
     const animate = () => {
       requestAnimationFrame(animate);
