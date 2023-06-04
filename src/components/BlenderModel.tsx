@@ -64,13 +64,15 @@ const BlenderModel: React.FC = () => {
         // @ts-ignore
         robothubApi.onNotificationWithkey('rSchema/number', (message)=>{
 
-          const yValue = message.payload.value.y
-          const xValue = message.payload.value.x
-          const zValue = message.payload.value.z
+          // const yValue = +message.payload.value.y
+          // const xValue = +message.payload.value.x
+          // const zValue = +message.payload.value.z
 
-          model.rotation.y = +yValue;
-          model.rotation.x = +xValue;
-          model.rotation.z = +zValue;
+          const {x, y, z} = message.payload.value
+          console.log(`x: ${x}, y: ${y}, z: ${z}`)
+          model.rotation.y = x;
+          model.rotation.x = y;
+          model.rotation.z = z;
         })
 
 
