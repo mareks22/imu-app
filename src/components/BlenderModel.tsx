@@ -9,8 +9,8 @@ const BlenderModel: React.FC = () => {
 
   function updateCoordinates(message: any) {
     const { x, y, z } = message.payload.value;
-    console.log(`x: ${x}, y: ${y}, z: ${z}`);
     setRotation({ x, y, z });
+    console.log(`x: ${rotation.x}, y: ${rotation.y}, z: ${rotation.z}`);
   }
 
   useEffect(() => {
@@ -19,12 +19,11 @@ const BlenderModel: React.FC = () => {
     let renderer: THREE.WebGLRenderer;
     let model: THREE.Object3D;
 
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      robothubApi.onNotificationWithKey("rhSchema/number", (message) => {
-        updateCoordinates(message);
-      });
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    robothubApi.onNotificationWithKey("rhSchema/number", (message) => {
+      updateCoordinates(message);
+    });
 
     const init = () => {
       // Create the scene
@@ -75,9 +74,11 @@ const BlenderModel: React.FC = () => {
 
     const animate = () => {
       requestAnimationFrame(animate);
-      model.rotation.y = rotation.y;
-      model.rotation.x = rotation.x;
-      model.rotation.z = rotation.z;
+
+      const newRotationValue = { ...rotation };
+      model.rotation.y = newRotationValue.y;
+      model.rotation.x = newRotationValue.x;
+      model.rotation.z = newRotationValue.z;
       renderer.render(scene, camera);
     };
 
