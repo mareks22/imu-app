@@ -7,10 +7,23 @@ const BlenderModel: React.FC = () => {
 
   const [rotation, setRotation] = useState({ x: 0, y: 0, z: 0 });
 
+  const [rotationX, setRotationX] = useState(0);
+  const [rotationY, setRotationY] = useState(0);
+  const [rotationZ, setRotationZ] = useState(0);
+
   function updateCoordinates(message: any) {
     const { x, y, z } = message.payload.value;
+    setRotationX(x);
+    setRotationY(y);
+    setRotationZ(z);
     setRotation({ x, y, z });
-    console.log(`x: ${rotation.x}, y: ${rotation.y}, z: ${rotation.z}`);
+    console.log(`from message: x: ${x}, y: ${y}, z: ${z}`);
+    console.log(
+      `setRotation: x: ${rotation.x}, y: ${rotation.y}, z: ${rotation.z}`
+    );
+    console.log(
+      `setRotationCoords: x: ${rotationX}, y: ${rotationY}, z: ${rotationZ}`
+    );
   }
 
   useEffect(() => {
