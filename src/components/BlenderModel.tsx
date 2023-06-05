@@ -12,15 +12,18 @@ const BlenderModel: React.FC = () => {
     let model: THREE.Object3D;
 
     const coordinates = { x: 0, y: 0, z: 0 };
+    const targetCoordinates = { x: 0, y: 0, z: 0 };
+
+    const easingFactor = 0.1;
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     robothubApi.onNotificationWithKey("rhSchema/number", (message) => {
       const { x, y, z } = message.payload.value;
       console.log("coordinates no state: ", coordinates);
-      coordinates.x = x.toFixed(2);
-      coordinates.y = y.toFixed(2);
-      coordinates.z = z.toFixed(2);
+      targetCoordinates.x = x.toFixed(2);
+      targetCoordinates.y = y.toFixed(2);
+      targetCoordinates.z = z.toFixed(2);
     });
 
     const init = () => {
@@ -72,6 +75,10 @@ const BlenderModel: React.FC = () => {
 
     const animate = () => {
       requestAnimationFrame(animate);
+
+      coordinates.x = (targetCoordinates.x - coordinates.x) * easingFactor;
+      coordinates.z = (targetCoordinates.z - coordinates.z) * easingFactor;
+      coordinates.y = (targetCoordinates.y - coordinates.y) * easingFactor;
 
       model.rotation.y = coordinates.x;
       model.rotation.x = coordinates.y;
