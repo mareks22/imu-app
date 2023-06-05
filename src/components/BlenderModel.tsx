@@ -1,30 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
 //import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 const BlenderModel: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  const [rotation, setRotation] = useState({ x: 0, y: 0, z: 0 });
-
-  const [rotationX, setRotationX] = useState(0);
-  const [rotationY, setRotationY] = useState(0);
-  const [rotationZ, setRotationZ] = useState(0);
-
-  function updateCoordinates(message: any) {
-    const { x, y, z } = message.payload.value;
-    setRotationX(x);
-    setRotationY(y);
-    setRotationZ(z);
-    setRotation({ x, y, z });
-    console.log(`from message: x: ${x}, y: ${y}, z: ${z}`);
-    console.log(
-      `setRotation: x: ${rotation.x}, y: ${rotation.y}, z: ${rotation.z}`
-    );
-    console.log(
-      `setRotationCoords: x: ${rotationX}, y: ${rotationY}, z: ${rotationZ}`
-    );
-  }
 
   useEffect(() => {
     let scene: THREE.Scene;
@@ -38,11 +17,10 @@ const BlenderModel: React.FC = () => {
     // @ts-ignore
     robothubApi.onNotificationWithKey("rhSchema/number", (message) => {
       const { x, y, z } = message.payload.value;
-      console.log('coordinates no state: ', coordinates)
-      coordinates.x = x;
-      coordinates.y = y;
-      coordinates.z = z;
-      updateCoordinates(message);
+      console.log("coordinates no state: ", coordinates);
+      coordinates.x = x.toFixed(2);
+      coordinates.y = y.toFixed(2);
+      coordinates.z = z.toFixed(2);
     });
 
     const init = () => {
