@@ -32,9 +32,16 @@ const BlenderModel: React.FC = () => {
     let renderer: THREE.WebGLRenderer;
     let model: THREE.Object3D;
 
+    const coordinates = { x: 0, y: 0, z: 0 };
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     robothubApi.onNotificationWithKey("rhSchema/number", (message) => {
+      const { x, y, z } = message.payload.value;
+
+      coordinates.x = x;
+      coordinates.y = y;
+      coordinates.z = z;
       updateCoordinates(message);
     });
 
@@ -88,10 +95,9 @@ const BlenderModel: React.FC = () => {
     const animate = () => {
       requestAnimationFrame(animate);
 
-      const newRotationValue = { ...rotation };
-      model.rotation.y = newRotationValue.y;
-      model.rotation.x = newRotationValue.x;
-      model.rotation.z = newRotationValue.z;
+      model.rotation.y = coordinates.x;
+      model.rotation.x = coordinates.y;
+      model.rotation.z = coordinates.z;
       renderer.render(scene, camera);
     };
 
