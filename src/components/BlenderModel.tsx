@@ -7,11 +7,24 @@ const BlenderModel: React.FC = () => {
 
   const [rotation, setRotation] = useState({ x: 0, y: 0, z: 0 });
 
+  function updateCoordinates(message: any) {
+    const { x, y, z } = message.payload.value;
+    console.log(`x: ${x}, y: ${y}, z: ${z}`);
+    setRotation({ x, y, z });
+  }
+
   useEffect(() => {
     let scene: THREE.Scene;
     let camera: THREE.PerspectiveCamera;
     let renderer: THREE.WebGLRenderer;
     let model: THREE.Object3D;
+
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      robothubApi.onNotificationWithKey("rhSchema/number", (message) => {
+        updateCoordinates(message);
+      });
 
     const init = () => {
       // Create the scene
@@ -55,27 +68,16 @@ const BlenderModel: React.FC = () => {
       // );
 
       const geometry = new THREE.BoxGeometry(1, 3, 1);
-      const material = new THREE.MeshBasicMaterial({ color: 0x006E00 });
+      const material = new THREE.MeshBasicMaterial({ color: 0x006e00 });
       model = new THREE.Mesh(geometry, material);
       scene.add(model);
     };
 
-    //update coordinates values
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-    robothubApi.onNotificationWithKey('rSchema/number', (message)=> {
-      const { x, y, z } = message.payload.value;
-      console.log(`x: ${x}, y: ${y}, z: ${z}`)
-      setRotation({ x, y, z });
-    });
-
     const animate = () => {
       requestAnimationFrame(animate);
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-          model.rotation.y = rotation.y
-          model.rotation.x = rotation.x
-          model.rotation.z = rotation.z
+      model.rotation.y = rotation.y;
+      model.rotation.x = rotation.x;
+      model.rotation.z = rotation.z;
       renderer.render(scene, camera);
     };
 
