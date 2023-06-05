@@ -21,8 +21,8 @@ const BlenderModel: React.FC = () => {
     robothubApi.onNotificationWithKey("rhSchema/number", (message) => {
       const { x, y, z } = message.payload.value;
       console.log("coordinates no state: ", coordinates);
-      targetCoordinates.x = x.toFixed(2);
-      targetCoordinates.y = y.toFixed(2);
+      targetCoordinates.x = y.toFixed(2);
+      targetCoordinates.y = x.toFixed(2);
       targetCoordinates.z = z.toFixed(2);
     });
 
@@ -70,6 +70,9 @@ const BlenderModel: React.FC = () => {
       const geometry = new THREE.BoxGeometry(1, 3, 1);
       const material = new THREE.MeshBasicMaterial({ color: 0x006e00 });
       model = new THREE.Mesh(geometry, material);
+
+      const light = new THREE.AmbientLight(0x404040);
+      scene.add(light);
       scene.add(model);
     };
 
