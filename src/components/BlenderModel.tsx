@@ -38,7 +38,7 @@ const BlenderModel: React.FC = () => {
     // @ts-ignore
     robothubApi.onNotificationWithKey("rhSchema/number", (message) => {
       const { x, y, z } = message.payload.value;
-
+      console.log('coordinates no state: ', coordinates)
       coordinates.x = x;
       coordinates.y = y;
       coordinates.z = z;
