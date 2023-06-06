@@ -7,7 +7,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 export default function Imu() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const fileUrl = new URL("../assets/camera2.gltf", window.location.href).href;
+  const fileUrl = new URL("camera2.gltf", window.location.href).href;
 
   useEffect(() => {
     let scene: THREE.Scene;
@@ -23,8 +23,8 @@ export default function Imu() {
     robothubApi.onNotificationWithKey("rhSchema/number", (message) => {
       const { x, y, z } = message.payload.value;
       console.log("coordinates no state: ", coordinates);
-      targetCoordinates.x = y.toFixed(2);
-      targetCoordinates.y = x.toFixed(2);
+      targetCoordinates.x = x.toFixed(2);
+      targetCoordinates.y = y.toFixed(2);
       targetCoordinates.z = z.toFixed(2);
     });
 
@@ -77,13 +77,15 @@ export default function Imu() {
       requestAnimationFrame(animate);
       renderer.render(scene, camera);
 
-      coordinates.x = (targetCoordinates.x - coordinates.x) * easingFactor;
-      coordinates.z = (targetCoordinates.z - coordinates.z) * easingFactor;
-      coordinates.y = (targetCoordinates.y - coordinates.y) * easingFactor;
-
-      model.rotation.y = coordinates.x;
-      model.rotation.x = coordinates.y;
-      model.rotation.z = coordinates.z;
+      if(model) { 
+        coordinates.x = (targetCoordinates.x - coordinates.x) * easingFactor;
+        coordinates.z = (targetCoordinates.z - coordinates.z) * easingFactor;
+        coordinates.y = (targetCoordinates.y - coordinates.y) * easingFactor;
+        
+        model.rotation.y = coordinates.x;
+        model.rotation.x = coordinates.y;
+        model.rotation.z = coordinates.z;
+      }
     };
 
     init();
