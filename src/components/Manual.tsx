@@ -7,7 +7,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 export default function Manual() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const fileUrl = new URL('../assets/camera2.gltf', import.meta.url).href
+  const fileUrl = new URL('camera2.gltf', window.location.href).href
 
   useEffect(() => {
     let scene: THREE.Scene;
