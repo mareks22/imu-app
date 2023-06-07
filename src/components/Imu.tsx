@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 export default function Imu() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -14,6 +15,7 @@ export default function Imu() {
     let camera: THREE.PerspectiveCamera;
     let renderer: THREE.WebGLRenderer;
     let model: THREE.Object3D;
+    let controls: OrbitControls
 
     const coordinates = { x: 0, y: 0, z: 0 };
     const targetCoordinates = { x: 0, y: 0, z: 0 };
@@ -22,10 +24,10 @@ export default function Imu() {
     // @ts-ignore
     robothubApi.onNotificationWithKey("rhSchema/number", (message) => {
       const { x, y, z } = message.payload.value;
-      console.log("coordinates no state: ", coordinates);
       targetCoordinates.x = x.toFixed(2);
       targetCoordinates.y = y.toFixed(2);
       targetCoordinates.z = z.toFixed(2);
+      console.log("coordinates toFixed(2): ", targetCoordinates);
     });
 
     const init = () => {
@@ -39,12 +41,6 @@ export default function Imu() {
         (gltf) => {
           if (gltf) {
             model = gltf.scene;
-
-            // Set pivot translation to center the object
-            const box = new THREE.Box3().setFromObject(model);
-            const center = new THREE.Vector3();
-            box.getCenter(center);
-            model.position.sub(center); // center the model
 
             scene.add(model);
             console.log("Model Added!");
@@ -65,6 +61,11 @@ export default function Imu() {
       camera = new THREE.PerspectiveCamera(45, 600 / 600, 0.1, 100);
       camera.position.z = 0.2;
       scene.add(camera);
+
+      controls = new OrbitControls(camera, canvasRef.current!);
+      controls.enableZoom = false;
+      controls.enablePan = false;
+      controls.enableRotate = false
 
       // Create the renderer
       renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current! });
