@@ -15,7 +15,7 @@ export default function Imu() {
     let camera: THREE.PerspectiveCamera;
     let renderer: THREE.WebGLRenderer;
     let model: THREE.Object3D;
-    let controls: OrbitControls
+    let controls: OrbitControls;
 
     const coordinates = { x: 0, y: 0, z: 0 };
     const targetCoordinates = { x: 0, y: 0, z: 0 };
@@ -42,6 +42,11 @@ export default function Imu() {
           if (gltf) {
             model = gltf.scene;
 
+            // Set pivot translation to center the object
+            const boundingBox = new THREE.Box3().setFromObject(model);
+            const center = boundingBox.getCenter(new THREE.Vector3());
+            model.position.sub(center);
+
             scene.add(model);
             console.log("Model Added!");
           }
@@ -65,7 +70,7 @@ export default function Imu() {
       controls = new OrbitControls(camera, canvasRef.current!);
       controls.enableZoom = false;
       controls.enablePan = false;
-      controls.enableRotate = false
+      controls.enableRotate = false;
 
       // Create the renderer
       renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current! });

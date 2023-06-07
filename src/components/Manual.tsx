@@ -28,7 +28,13 @@ export default function Manual() {
           if (gltf) {
             model = gltf.scene;
 
+            // Set pivot translation to center the object
+            const boundingBox = new THREE.Box3().setFromObject(model);
+            const center = boundingBox.getCenter(new THREE.Vector3());
+            model.position.sub(center);
+
             scene.add(model);
+            console.log("Model Added!");
           }
         },
         undefined,
