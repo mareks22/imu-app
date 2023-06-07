@@ -41,9 +41,10 @@ export default function Imu() {
             model = gltf.scene;
 
             // Set pivot translation to center the object
-            const boundingBox = new THREE.Box3().setFromObject(model);
-            const center = boundingBox.getCenter(new THREE.Vector3());
-            model.position.sub(center);
+            const box = new THREE.Box3().setFromObject(model);
+            const center = new THREE.Vector3();
+            box.getCenter(center);
+            model.position.sub(center); // center the model
 
             scene.add(model);
             console.log("Model Added!");
@@ -62,7 +63,7 @@ export default function Imu() {
 
       // Create the camera
       camera = new THREE.PerspectiveCamera(45, 600 / 600, 0.1, 100);
-      camera.position.z = 0.4;
+      camera.position.z = 0.2;
       scene.add(camera);
 
       // Create the renderer
@@ -77,11 +78,11 @@ export default function Imu() {
       requestAnimationFrame(animate);
       renderer.render(scene, camera);
 
-      if(model) { 
+      if (model) {
         coordinates.x = (targetCoordinates.x - coordinates.x) * easingFactor;
         coordinates.z = (targetCoordinates.z - coordinates.z) * easingFactor;
         coordinates.y = (targetCoordinates.y - coordinates.y) * easingFactor;
-        
+
         model.rotation.y = coordinates.x;
         model.rotation.x = coordinates.y;
         model.rotation.z = coordinates.z;
