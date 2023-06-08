@@ -34,6 +34,10 @@ export default function Imu() {
       // Create the scene
       scene = new THREE.Scene();
 
+      // Create the camera
+      camera = new THREE.PerspectiveCamera(45, 600 / 600, 0.1, 100);
+      //camera.position.z = 0.2;
+
       //Load the model
       const loader = new GLTFLoader();
       loader.load(
@@ -45,7 +49,17 @@ export default function Imu() {
             // Set pivot translation to center the object
             const boundingBox = new THREE.Box3().setFromObject(model);
             const center = boundingBox.getCenter(new THREE.Vector3());
-            model.position.sub(center);
+            model.position.set(-center.x, -center.y, -center.z);
+
+            // ensure the model is visible in the viewport
+            const maxDimension = Math.max(
+              boundingBox.max.x - boundingBox.min.x,
+              boundingBox.max.y - boundingBox.min.y,
+              boundingBox.max.z - boundingBox.min.z
+            );
+            const cameraDistance = maxDimension * 2;
+            camera.position.z = cameraDistance;
+            scene.add(camera);
 
             scene.add(model);
             console.log("Model Added!");
@@ -61,11 +75,6 @@ export default function Imu() {
       const light = new THREE.PointLight(0xffffff, 1, 300);
       light.position.set(3, 10, 20);
       scene.add(light);
-
-      // Create the camera
-      camera = new THREE.PerspectiveCamera(45, 600 / 600, 0.1, 100);
-      camera.position.z = 0.2;
-      scene.add(camera);
 
       controls = new OrbitControls(camera, canvasRef.current!);
       controls.enableZoom = false;
@@ -89,8 +98,8 @@ export default function Imu() {
         coordinates.z = (targetCoordinates.z - coordinates.z) * easingFactor;
         coordinates.y = (targetCoordinates.y - coordinates.y) * easingFactor;
 
-        model.rotation.y = coordinates.x;
-        model.rotation.x = coordinates.y;
+        model.rotation.y = coordinates.y;
+        model.rotation.x = coordinates.x;
         model.rotation.z = coordinates.z;
       }
     };
