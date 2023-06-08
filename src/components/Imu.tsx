@@ -18,16 +18,21 @@ export default function Imu() {
     let controls: OrbitControls;
 
     const coordinates = { x: 0, y: 0, z: 0 };
-    const targetCoordinates = { x: 0, y: 0, z: 0 };
-    const easingFactor = 0.1;
+    let previousTimestamp = 0;
+    let currentTimestamp = 0;
+
+    let rotationX = 0;
+    let rotationY = 0;
+    let rotationZ = 0;
 
     // @ts-ignore
     robothubApi.onNotificationWithKey("rhSchema/number", (message) => {
-      const { x, y, z } = message.payload.value;
-      targetCoordinates.x = x.toFixed(2);
-      targetCoordinates.y = y.toFixed(2);
-      targetCoordinates.z = z.toFixed(2);
-      console.log("coordinates toFixed(2): ", targetCoordinates);
+      const { x, y, z, timestamp } = message.payload.value;
+      coordinates.x = x;
+      coordinates.y = y;
+      coordinates.z = z;
+      currentTimestamp = timestamp;
+      console.log("coordinates toFixed(2): ", coordinates);
     });
 
     const init = () => {
@@ -94,13 +99,18 @@ export default function Imu() {
       renderer.render(scene, camera);
 
       if (model) {
-        coordinates.x = (targetCoordinates.x - coordinates.x) * easingFactor;
-        coordinates.z = (targetCoordinates.z - coordinates.z) * easingFactor;
-        coordinates.y = (targetCoordinates.y - coordinates.y) * easingFactor;
+        var dt = (currentTimestamp - previousTimestamp) / 1000; // Convert to seconds
+        // Integrate angular velocity to get rotation angles
+        rotationX += coordinates.x * dt;
+        rotationY += coordinates.y * dt;
+        rotationZ += coordinates.z * dt;
 
-        model.rotation.y = coordinates.y;
-        model.rotation.x = coordinates.x;
-        model.rotation.z = coordinates.z;
+        // Apply rotation to the 3D object
+        model.rotation.x = rotationX;
+        model.rotation.y = rotationY;
+        model.rotation.z = rotationZ;
+
+        previousTimestamp = currentTimestamp;
       }
     };
 
