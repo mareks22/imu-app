@@ -6,22 +6,21 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 export default function Imu() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  let model: THREE.Object3D;
 
   const fileUrl = new URL("camera2.gltf", window.location.href).href;
 
   const coordinates = { x: 0, y: 0, z: 0 };
 
   function resetCoords() {
-    coordinates.x = 0;
-    coordinates.y = 0;
-    coordinates.z = 0;
+    model.rotation.set(0, 0, 0);
+    model.updateMatrix();
   }
 
   useEffect(() => {
     let scene: THREE.Scene;
     let camera: THREE.PerspectiveCamera;
     let renderer: THREE.WebGLRenderer;
-    let model: THREE.Object3D;
 
     let previousTimestamp = 0;
     let currentTimestamp = 0;
