@@ -58,6 +58,9 @@ export default function Imu() {
             const boundingBox = new THREE.Box3().setFromObject(model);
             const dimension = new THREE.Vector3();
             boundingBox.getSize(dimension);
+            const color = new THREE.Color(0xff0000);
+            const boxHelper = new THREE.Box3Helper(boundingBox, color);
+            scene.add(boxHelper);
 
             model.position.set(
               -dimension.x / 2,
