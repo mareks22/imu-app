@@ -10,6 +10,14 @@ export default function Imu() {
 
   const fileUrl = new URL("camera2.gltf", window.location.href).href;
 
+  const coordinates = { x: 0, y: 0, z: 0 };
+
+  function resetCoords() {
+    coordinates.x = 0;
+    coordinates.y = 0;
+    coordinates.z = 0;
+  }
+
   useEffect(() => {
     let scene: THREE.Scene;
     let camera: THREE.PerspectiveCamera;
@@ -17,7 +25,6 @@ export default function Imu() {
     let model: THREE.Object3D;
     let controls: OrbitControls;
 
-    const coordinates = { x: 0, y: 0, z: 0 };
     let previousTimestamp = 0;
     let currentTimestamp = 0;
 
@@ -132,5 +139,12 @@ export default function Imu() {
     };
   }, []);
 
-  return <canvas ref={canvasRef} />;
+  return (
+    <>
+      <canvas ref={canvasRef} />
+      <button className="button" onClick={resetCoords}>
+        Reset
+      </button>
+    </>
+  );
 }
