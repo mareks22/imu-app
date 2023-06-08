@@ -36,8 +36,8 @@ export default function Imu() {
       coordinates.x = x;
       coordinates.y = y;
       coordinates.z = z;
-      currentTimestamp = timestamp;
-      console.log("coordinates toFixed(2): ", coordinates);
+      currentTimestamp = +timestamp;
+      console.log(`coordinates: ${coordinates}, timestamp: ${timestamp}`);
     });
 
     const init = () => {
@@ -93,7 +93,7 @@ export default function Imu() {
       renderer.render(scene, camera);
 
       if (model) {
-        var dt = (currentTimestamp - previousTimestamp) / 1000; // Convert to seconds
+        const dt = (currentTimestamp - previousTimestamp) / 1000; // Convert to seconds
         // Integrate angular velocity to get rotation angles
         rotationX += coordinates.x * dt;
         rotationY += coordinates.y * dt;
