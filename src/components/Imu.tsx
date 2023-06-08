@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 export default function Imu() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -23,7 +22,6 @@ export default function Imu() {
     let camera: THREE.PerspectiveCamera;
     let renderer: THREE.WebGLRenderer;
     let model: THREE.Object3D;
-    let controls: OrbitControls;
 
     let previousTimestamp = 0;
     let currentTimestamp = 0;
@@ -48,7 +46,7 @@ export default function Imu() {
 
       // Create the camera
       camera = new THREE.PerspectiveCamera(45, 600 / 600, 0.1, 100);
-      //camera.position.z = 0.2;
+      camera.position.z = 0.2;
 
       //Load the model
       const loader = new GLTFLoader();
@@ -58,21 +56,15 @@ export default function Imu() {
           if (gltf) {
             model = gltf.scene;
 
-            // Set pivot translation to center the object
             const boundingBox = new THREE.Box3().setFromObject(model);
-            const center = boundingBox.getCenter(new THREE.Vector3());
-            model.position.set(-center.x, -center.y, -center.z);
+            const dimension = new THREE.Vector3();
+            boundingBox.getSize(dimension);
 
-            // ensure the model is visible in the viewport
-            const maxDimension = Math.max(
-              boundingBox.max.x - boundingBox.min.x,
-              boundingBox.max.y - boundingBox.min.y,
-              boundingBox.max.z - boundingBox.min.z
+            model.position.set(
+              -dimension.x / 2,
+              -dimension.y / 2,
+              -dimension.z / 2
             );
-            const cameraDistance = maxDimension * 2;
-            camera.position.z = cameraDistance;
-            scene.add(camera);
-
             scene.add(model);
             console.log("Model Added!");
           }
@@ -87,11 +79,6 @@ export default function Imu() {
       const light = new THREE.PointLight(0xffffff, 1, 300);
       light.position.set(3, 10, 20);
       scene.add(light);
-
-      controls = new OrbitControls(camera, canvasRef.current!);
-      controls.enableZoom = false;
-      controls.enablePan = false;
-      controls.enableRotate = false;
 
       // Create the renderer
       renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current! });
