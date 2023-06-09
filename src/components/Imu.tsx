@@ -9,21 +9,22 @@ export default function Imu() {
   let model: THREE.Object3D;
 
   const fileUrl = new URL("oak.glb", window.location.href).href;
-
   const coordinates = { x: 0, y: 0, z: 0 };
+
+  let previousTimestamp = 0;
+  let currentTimestamp = 0;
 
   function resetCoords() {
     model.rotation.set(0, 0, 0);
     model.updateMatrix();
+    currentTimestamp = -currentTimestamp;
+    previousTimestamp = 0;
   }
 
   useEffect(() => {
     let scene: THREE.Scene;
     let camera: THREE.PerspectiveCamera;
     let renderer: THREE.WebGLRenderer;
-
-    let previousTimestamp = 0;
-    let currentTimestamp = 0;
 
     let rotationX = 0;
     let rotationY = 0;
@@ -32,9 +33,9 @@ export default function Imu() {
     // @ts-ignore
     robothubApi.onNotificationWithKey("rhSchema/number", (message) => {
       const { x, y, z, timestamp } = message.payload.value;
-      coordinates.x = x;
-      coordinates.y = y;
-      coordinates.z = z;
+      coordinates.x = -y;
+      coordinates.y = -x;
+      coordinates.z = -z;
       currentTimestamp = +timestamp;
       console.log(`coordinates: ${coordinates}, timestamp: ${timestamp}`);
     });
@@ -64,10 +65,6 @@ export default function Imu() {
             const center = box.getCenter(new THREE.Vector3());
             model.position.sub(center);
 
-            const axesHelper = new THREE.AxesHelper(1);
-            scene.add(axesHelper);
-            axesHelper.position.copy(model.position);
-
             scene.add(modelContainer);
             console.log("Model Added!");
           }
@@ -85,7 +82,6 @@ export default function Imu() {
 
       // Create the renderer
       renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current! });
-
       renderer.setSize(600, 600);
       renderer.setClearColor("#242424");
       renderer.render(scene, camera);

@@ -7,14 +7,14 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 export default function Manual() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const fileUrl = new URL('camera2.gltf', window.location.href).href
+  const fileUrl = new URL("oak.glb", window.location.href).href;
 
   useEffect(() => {
     let scene: THREE.Scene;
     let camera: THREE.PerspectiveCamera;
     let renderer: THREE.WebGLRenderer;
     let model: THREE.Object3D;
-    let controls: OrbitControls
+    let controls: OrbitControls;
 
     const init = () => {
       // Create the scene
@@ -59,6 +59,7 @@ export default function Manual() {
       renderer.setClearColor("#242424");
       renderer.render(scene, camera);
 
+      // Orbit controls
       controls = new OrbitControls(camera, canvasRef.current!);
       controls.enableDamping = true;
       controls.enableZoom = false;
