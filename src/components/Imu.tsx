@@ -55,18 +55,6 @@ export default function Imu() {
           if (gltf) {
             model = gltf.scene;
 
-            const boundingBox = new THREE.Box3().setFromObject(model);
-            const dimension = new THREE.Vector3();
-            boundingBox.getSize(dimension);
-            const color = new THREE.Color(0xff0000);
-            const boxHelper = new THREE.Box3Helper(boundingBox, color);
-            scene.add(boxHelper);
-
-            model.position.set(
-              -dimension.x / 2,
-              -dimension.y / 2,
-              -dimension.z / 2
-            );
             scene.add(model);
             console.log("Model Added!");
           }
