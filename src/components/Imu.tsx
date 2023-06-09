@@ -8,7 +8,7 @@ export default function Imu() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   let model: THREE.Object3D;
 
-  const fileUrl = new URL("camera2.gltf", window.location.href).href;
+  const fileUrl = new URL("oak.glb", window.location.href).href;
 
   const coordinates = { x: 0, y: 0, z: 0 };
 
