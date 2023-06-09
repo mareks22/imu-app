@@ -15,10 +15,13 @@ export default function Imu() {
   let currentTimestamp = 0;
 
   function resetCoords() {
+    const initialTimestamp = 0;
+    const timestampDifference = currentTimestamp - previousTimestamp;
+    previousTimestamp = initialTimestamp;
+    currentTimestamp = initialTimestamp + timestampDifference;
+
     model.rotation.set(0, 0, 0);
     model.updateMatrix();
-    currentTimestamp = -currentTimestamp;
-    previousTimestamp = 0;
   }
 
   useEffect(() => {
@@ -102,8 +105,6 @@ export default function Imu() {
         model.rotation.x = rotationX;
         model.rotation.y = rotationY;
         model.rotation.z = rotationZ;
-
-        model.updateMatrix();
 
         previousTimestamp = currentTimestamp;
       }
