@@ -96,8 +96,6 @@ export default function Imu() {
         model.rotation.y = rotationY;
         model.rotation.z = rotationZ;
 
-        model.updateMatrix();
-
         previousTimestamp = currentTimestamp;
       }
     };
