@@ -11,20 +11,13 @@ export default function Imu() {
   const fileUrl = new URL("oak.glb", window.location.href).href;
   const coordinates = { x: 0, y: 0, z: 0 };
 
-  let previousTimestamp = 0;
-  let currentTimestamp = 0;
-
-  function resetCoords() {
-    model.rotation.set(0, 0, 0);
-    model.updateMatrix();
-    currentTimestamp = -currentTimestamp;
-    previousTimestamp = 0;
-  }
-
   useEffect(() => {
     let scene: THREE.Scene;
     let camera: THREE.PerspectiveCamera;
     let renderer: THREE.WebGLRenderer;
+
+    let previousTimestamp = 0;
+    let currentTimestamp = 0;
 
     let rotationX = 0;
     let rotationY = 0;
@@ -127,12 +120,5 @@ export default function Imu() {
     };
   }, []);
 
-  return (
-    <>
-      <canvas ref={canvasRef} />
-      <button className="button" onClick={resetCoords}>
-        Reset
-      </button>
-    </>
-  );
+  return <canvas ref={canvasRef} />;
 }
