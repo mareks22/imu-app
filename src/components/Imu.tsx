@@ -8,7 +8,7 @@ export default function Imu() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   let model: THREE.Object3D;
 
-  const fileUrl = new URL("camera2.gltf", window.location.href).href;
+  const fileUrl = new URL("oak.glb", window.location.href).href;
 
   const coordinates = { x: 0, y: 0, z: 0 };
 
@@ -55,16 +55,7 @@ export default function Imu() {
           if (gltf) {
             model = gltf.scene;
 
-            //Create a parent object for the model
-            const modelContainer = new THREE.Object3D();
-            modelContainer.add(model);
-
-            // Center the model
-            const box = new THREE.Box3().setFromObject(model);
-            const center = box.getCenter(new THREE.Vector3());
-            model.position.sub(center);
-
-            scene.add(modelContainer);
+            scene.add(model);
             console.log("Model Added!");
           }
         },
