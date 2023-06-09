@@ -64,6 +64,10 @@ export default function Imu() {
             const center = box.getCenter(new THREE.Vector3());
             model.position.sub(center);
 
+            const axesHelper = new THREE.AxesHelper(1);
+            scene.add(axesHelper);
+            axesHelper.position.copy(model.position);
+
             scene.add(modelContainer);
             console.log("Model Added!");
           }
