@@ -55,6 +55,11 @@ export default function Imu() {
           if (gltf) {
             model = gltf.scene;
 
+            // Center the model
+            const box = new THREE.Box3().setFromObject(model);
+            const center = box.getCenter(new THREE.Vector3());
+            model.position.sub(center);
+
             scene.add(model);
             console.log("Model Added!");
           }
