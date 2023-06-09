@@ -55,12 +55,16 @@ export default function Imu() {
           if (gltf) {
             model = gltf.scene;
 
+            //Create a parent object for the model
+            const modelContainer = new THREE.Object3D();
+            modelContainer.add(model);
+
             // Center the model
             const box = new THREE.Box3().setFromObject(model);
             const center = box.getCenter(new THREE.Vector3());
             model.position.sub(center);
 
-            scene.add(model);
+            scene.add(modelContainer);
             console.log("Model Added!");
           }
         },
@@ -98,6 +102,8 @@ export default function Imu() {
         model.rotation.x = rotationX;
         model.rotation.y = rotationY;
         model.rotation.z = rotationZ;
+
+        model.updateMatrix();
 
         previousTimestamp = currentTimestamp;
       }
